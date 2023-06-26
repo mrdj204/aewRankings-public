@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}Graphs{% endblock title %}
+
+{% block header %}
+<style>
+
+.hidden {
+    display: none
+}
+
+.toggle {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  width: 150px;
+  height: 60px;
+  color: white;
+  outline: 0;
+  text-decoration: none;
+  border-radius: 100px;
+  border: 2px solid #546E7A;
+  background-color: #263238;
+  transition: all 500ms;
+  &:active {
+    background-color: darken(#263238, 5%);
+  }
+  &:hover:not(.toggle--moving) {
+    &:after {
+      background-color: #455A64;
+    }
+  }
+  &:after {
+    display: block;
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 4px;
+    width: calc(50% - 4px);
+    line-height: 45px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: white;
+    background-color: #37474F;
+    border: 2px solid;
+    transition: all 500ms;
+  }
+}
+.toggle--on {
+  &:after {
+    content: 'ON';
+    border-radius: 50px 5px 5px 50px;
+    color: #66BB6A;
+  }
+}
+#stats_or_mmr.toggle--on {
+  &:after {
+    content: 'Stats';
+  }
+}
+.toggle--off {
+  &:after {
+    content: 'OFF';
+    border-radius: 5px 50px 50px 5px;
+    transform: translate(100%, 0);
+    color: #f44336;
+  }
+}
+#stats_or_mmr.toggle--off {
+  &:after {
+    content: 'MMR';
+  }
+}
+.toggle--moving {
+  background-color: darken(#263238, 5%);
+  &:after {
+    color: transparent;
+    border-color: darken(#546E7A, 8%);
+    background-color: darken(#37474F, 10%);
+    transition: color 0s,
+                transform 500ms,
+                border-radius 500ms,
+                background-color 500ms;
+  }
+}
+
+*, *:before,
+*:after {
+  box-sizing: border-box;
+}
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<!-- Toggle button between stat graphs and mmr graphs -->
+<div style="display: flex; justify-content: center; align-items: center; padding-bottom: 10px">
+    <button id="stats_or_mmr" value="stats" class="toggle toggle--on"></button>
+    <script>
+      var statmmr_onValue = "stats";
+      var statmmr_offValue = "mmr";
+
+      $('#stats_or_mmr').click(function(e) {
+        var toggle = this;
+
+        e.preventDefault();
+
+        $(toggle).toggleClass('toggle--on')
+                 .toggleClass('toggle--off')
+                 .addClass('toggle--moving');
+
+        setTimeout(function() {
+          $(toggle).removeClass('toggle--moving');
+        }, 200);
+
+        // Toggle the button value between "on" and "off"
+        var currentValue = $(toggle).val();
+        var newValue = currentValue === statmmr_onValue ? statmmr_offValue : statmmr_onValue;
+        $(toggle).val(newValue);
+
+        $('#stats_selectors').toggleClass('hidden');
+        $('#mmr_selectors').toggleClass('hidden');
+        updateGraphContent();
+      });
+    </script>
+</div>
+
+<!-- Selectors for stat graphs -->
+<div id="stats_selectors" class="centered" style="padding-bottom: 15px; padding-top: 5px">
+    <select id="stats_division">
+        {% for division in stats_divisions %}
+        <option value="{{ division }}">{{ division }}</option>
+        {% endfor %}
+    </select>
+    <select id="stats_division_key">
+        {% for division_key in stats_division_keys %}
+        <option value="{{ division_key }}">{{ division_key }}</option>
+        {% endfor %}
+    </select>
+    <select id="stat_key">
+        {% for graph_key in stats_graph_keys %}
+        <option value="{{ graph_key }}">{{ graph_key }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Toggle button for winless entries -->
+    <div style="text-align: center; padding-top: 15px">
+        <h3 class="nomargin">Winless</h3>
+        <button id="stats_winless" value="off" class="toggle toggle--off"></button>
+        <script>
+          var onValue = "on";
+          var offValue = "off";
+
+          $('#stats_winless').click(function(e) {
+            var toggle = this;
+
+            e.preventDefault();
+
+            $(toggle).toggleClass('toggle--on')
+                     .toggleClass('toggle--off')
+                     .addClass('toggle--moving');
+
+            setTimeout(function() {
+              $(toggle).removeClass('toggle--moving');
+            }, 200);
+
+            // Toggle the button value between "on" and "off"
+            var currentValue = $(toggle).val();
+            var newValue = currentValue === onValue ? offValue : onValue;
+            $(toggle).val(newValue);
+
+            updateGraphContent();
+          });
+        </script>
+    </div>
+</div>
+
+<!-- Selectors for mmr graphs -->
+<div id="mmr_selectors" class="hidden centered" style="padding-bottom: 15px; padding-top: 5px">
+    <select id="mmr_division">
+        {% for division in mmr_divisions %}
+        <option value="{{ division }}">{{ division }}</option>
+        {% endfor %}
+    </select>
+    <select id="mmr_type">
+        {% for mmr_type in mmr_types %}
+        <option value="{{ mmr_type }}">{{ mmr_type }}</option>
+        {% endfor %}
+    </select>
+    <select id="mmr_division_key">
+        {% for division_key in mmr_division_keys %}
+        <option value="{{ division_key }}">{{ division_key }}</option>
+        {% endfor %}
+    </select>
+    <select id="mmr_key">
+        {% for graph_key in mmr_graph_keys %}
+        <option value="{{ graph_key }}">{{ graph_key }}</option>
+        {% endfor %}
+    </select>
+
+    <!-- Toggle button for winless entries -->
+    <div style="text-align: center; padding-top: 15px">
+        <h3 class="nomargin">Winless</h3>
+        <button id="mmr_winless" value="off" class="toggle toggle--off"></button>
+        <script>
+          var onValue = "on";
+          var offValue = "off";
+
+          $('#mmr_winless').click(function(e) {
+            var toggle = this;
+
+            e.preventDefault();
+
+            $(toggle).toggleClass('toggle--on')
+                     .toggleClass('toggle--off')
+                     .addClass('toggle--moving');
+
+            setTimeout(function() {
+              $(toggle).removeClass('toggle--moving');
+            }, 200);
+
+            // Toggle the button value between "on" and "off"
+            var currentValue = $(toggle).val();
+            var newValue = currentValue === onValue ? offValue : onValue;
+            $(toggle).val(newValue);
+
+            updateGraphContent();
+          });
+        </script>
+    </div>
+</div>
+
+<!-- Loading div and graph content div -->
+<div id="loading" class="centered">
+    Loading...<br><br>
+    <!--<img src="{{ url_for('static', path='/pepe-carlton.gif') }}">-->
+</div>
+<div id="graph_content" class="centered"></div>
+
+<!-- Functions for changing graph_content -->
+<script>
+function updateGraphContent() {
+    var stats_or_mmr = $('#stats_or_mmr').val();
+    if (stats_or_mmr === "stats") {
+      updateStatsGraphContent();
+    } else {
+      updateMMRGraphContent();
+    }
+}
+
+function updateMMRGraphContent() {
+    var selectedDivision = $('#mmr_division').val();
+    var selectedMmrType = $('#mmr_type').val();
+    var selectedDivisionKey = $('#mmr_division_key').val();
+    var selectedMmrKey = $('#mmr_key').val();
+    var selectedWinless = $('#mmr_winless').val();
+    var url = `/graphs_mmr/${selectedDivision}/${selectedMmrType}/${selectedDivisionKey}/${selectedMmrKey}/${selectedWinless}`;
+
+    // Show loading GIF
+    $('#loading').show();
+    $('#graph_content').hide();
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            // Hide loading GIF and replace the table with the new one
+            $('#loading').hide();
+            $('#graph_content').html(data);
+            $('#graph_content').show();
+
+            // Initialize lightbox for the newly loaded content
+            initializeLightbox();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+
+function updateStatsGraphContent() {
+    var selectedDivision = $('#stats_division').val();
+    var selectedMmrKey = $('#stat_key').val();
+    var selectedDivisionKey = $('#stats_division_key').val();
+    var selectedWinless = $('#stats_winless').val();
+    var url = `/graphs_stat/${selectedDivision}/${selectedMmrKey}/${selectedDivisionKey}/${selectedWinless}`;
+
+    // Show loading GIF
+    $('#loading').show();
+    $('#graph_content').hide();
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            // Hide loading GIF and replace the table with the new one
+            $('#loading').hide();
+            $('#graph_content').html(data);
+            $('#graph_content').show();
+
+            // Initialize lightbox for the newly loaded content
+            initializeLightbox();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+}
+
+function initializeLightbox() {
+  const galleryImages = document.querySelectorAll(".graph_image");
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImage = document.querySelector(".lightbox-image");
+  const closeBtn = document.querySelector(".close");
+  const prevBtn = document.querySelector(".prev-btn");
+  const nextBtn = document.querySelector(".next-btn");
+
+  let currentImageIndex = 0;
+
+  galleryImages.forEach(function(image, index) {
+    image.addEventListener("click", function() {
+      currentImageIndex = index;
+      showImage();
+      lightbox.style.display = "block";
+    });
+  });
+
+  function showImage() {
+    const src = galleryImages[currentImageIndex].getAttribute("data-fullsize");
+    const alt = galleryImages[currentImageIndex].getAttribute("alt");
+    lightboxImage.setAttribute("src", src);
+    lightboxImage.setAttribute("alt", alt);
+  }
+
+  closeBtn.addEventListener("click", function() {
+    lightbox.style.display = "none";
+  });
+
+  prevBtn.addEventListener("click", function() {
+    currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+    showImage();
+  });
+
+  nextBtn.addEventListener("click", function() {
+    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+    showImage();
+  });
+
+  lightbox.addEventListener("click", function(event) {
+    if (event.target === this) {
+      lightbox.style.display = "none";
+    }
+  });
+
+  lightboxImage.addEventListener("click", function() {
+    currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+    showImage();
+  });
+
+  document.addEventListener("keydown", function(event) {
+    if (event.key === "ArrowLeft") {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      showImage();
+    } else if (event.key === "ArrowRight") {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      showImage();
+    } else if (event.key === "Escape") {
+      lightbox.style.display = "none";
+    }
+  });
+}
+
+</script>
+
+<!-- enable select2-->
+<script>
+$(document).ready(function() {
+    $('select').select2({
+        minimumResultsForSearch: 10,
+        tags: true,
+        width: '225px',
+    });
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    });
+
+
+
+    // Run updateGraphContent() once the page has finished loading
+    $(window).on("load", updateGraphContent);
+
+    // Bind select2:select event to updateGraphContent function
+    $('select').on('select2:select', updateGraphContent);
+});
+</script>
+
+{% endblock content %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Stats{% endblock title %}
+
+{% block content %}
+
+<!-- Stat Selectors -->
+<div class="centered" style="padding-bottom: 20px">
+    <select id="division">
+        {% for division in divisions %}
+        <option value="{{ division }}">{{ division }}</option>
+        {% endfor %}
+    </select>
+    <select id="year">
+        {% for year in years %}
+        <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+    </select>
+    <select id="mmr_key">
+        {% for mmr_key in mmr_keys %}
+        <option value="{{ mmr_key }}">{{ mmr_key }}</option>
+        {% endfor %}
+    </select>
+    <select id="division_key">
+        {% for division_key in division_keys %}
+        <option value="{{ division_key }}">{{ division_key }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- enable select2 -->
+<script>
+$(document).ready(function() {
+    $('select').select2({
+        minimumResultsForSearch: 10,
+        tags: true,
+        width: '150px',
+    });
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    });
+
+$(document).on('select2:select', function(e) {
+    var selectedDivision = $('#division').val();
+    var selectedYear = $('#year').val();
+    var selectedMmrKey = $('#mmr_key').val();
+    var selectedDivisionKey = $('#division_key').val();
+    var url = `/stats/${selectedDivision}/${selectedYear}/${selectedMmrKey}/${selectedDivisionKey}`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(data) {
+            $('#stats_table').DataTable().destroy(); // destroy the current DataTable
+            $('#stat_content').html(data); // replace the table with the new one
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.log(errorThrown);
+        }
+    });
+});
+
+});
+</script>
+
+<!-- Stat Table -->
+<div id="stat_content">{{ initial|safe }}</div>
+
+{% endblock content %}

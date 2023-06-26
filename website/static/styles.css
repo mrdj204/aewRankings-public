@@ -1,0 +1,186 @@
+body {
+    background-color: #000900;
+    color: white;
+    font-family: monospace;
+    font-size: 1.78em;
+}
+
+/* Unvisited links *//* Visited links */
+a:link, a:visited {
+  color: #0f0;
+  text-decoration: none;
+}
+
+/* Selected links *//* Mouse over links */
+a:hover, a:active {
+  color: #f00;
+  text-decoration: none;
+}
+
+input {
+    color: white;
+    background-color: #002a00;
+    font-size: .75em;
+}
+
+span.red {
+    color: #FF2121
+}
+
+.Gold span.red {
+    color: #900
+}
+
+span.green {
+    color: #32FF32
+}
+
+table, td, th, tr {
+    border: 1px solid;
+    border-color: #333;
+    font-weight: bold;
+}
+
+table {
+    margin: 0 auto;
+}
+
+td, th {
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    font-size: .78em;
+    white-space: nowrap;
+}
+
+table.dataTable {
+  width: auto;
+}
+
+table.dataTable thead th {
+  text-align: center; /* Add this CSS to center text in header cells */
+}
+
+div.dataTables_wrapper  div.dataTables_filter {
+  width: 100%;
+  float: none;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+/* Datatables info box*/
+.top, .top_title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Define background color for fixed header */
+.sorting {
+  background-color: #001900; /* Replace with your desired background color */
+}
+
+.dataTables_info {
+    padding-top: 0px !important;
+}
+
+.centered {
+    text-align: center;
+}
+
+.nomargin {
+    margin: 0;
+}
+
+#footer {
+    background-color: #000900;
+    border-top: 2px solid #000000;
+    padding-top: 10px;
+    margin-bototm: 10px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+a.gold:link, a.gold:visited {
+    color: gold;
+}
+
+a.gold:hover, a.gold:active {
+    color: red;
+}
+
+.Elite_text {
+    color: #50C878;
+}
+
+.Gold_text {
+    color: gold;
+}
+
+.Silver_text {
+    color: silver;
+}
+
+.Jobber_text {
+    color: #CD7F32;
+}
+
+.Elite {
+    background-color: #27592D;
+    border: #27592D;
+    color: white;
+    font-weight: bold;
+}
+
+.Gold {
+    background-color: #B8860B;
+    border: #B8860B;
+    color: black;
+    font-weight: bold;
+}
+
+.Silver {
+    background-color: #71706e;
+    border: #71706e;
+    color: white;
+    font-weight: bold;
+}
+
+.Jobber {
+    background-color: #804a00;
+    border: #804a00;
+    color: white;
+}
+
+.Unranked {
+    background-color: #222;
+    border-top: white 1px solid;
+    border-bottom: white 1px solid;
+    color: white;
+}
+
+/* select2 */
+.select2-search { background-color: #002a00; }
+
+.select2-search input {
+ color: #fff;
+ background-color: #002a00
+}
+
+.select2-results {
+    background-color: #002a00;
+    font-size: .75em;
+}
+
+.select2-selection__rendered {
+    background-color: #002a00;
+    color: white !important;
+}
+.select2-results__option  {
+    color: white;
+}

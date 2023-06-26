@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Debug{% endblock title %}
+
+{% block content %}
+</div>
+<pre>{{ output|tojson }}</pre>
+<div>
+{% endblock content %}

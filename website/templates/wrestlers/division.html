@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}{{ division.abr }}{% endblock title %}
+
+{% block header %}
+<style>
+    .name {
+        font-weight: bold;
+    }
+
+    .wrestlers {
+        font-size: 12px;
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<!-- division wrestler table -->
+<h1 class="nomargin centered Elite_text">{{ division.name }}</h1>
+{{ division.wrestlers|safe }}
+
+<!-- enable datatables -->
+<script>
+  $.fn.dataTable.naturalSort = function ( a, b ) {
+      return naturalSort(a,b);
+  };
+
+  $(document).ready( function () {
+    $('#division_table').DataTable({
+      "dom": '<"top"if>rt<"bottom"><"clear">',
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[0, 'asc'], [2, 'desc']],
+      columnDefs: [{
+              targets: '_all',
+              createdCell: function (td, cellData, rowData, row, col) {
+                $(td).css('padding-left', '10px');
+                $(td).css('padding-right', '10px');
+                $(td).css('padding-top', '0px');
+                $(td).css('padding-bottom', '0px');
+                if (col == 0) {
+                    var childDiv = $(td).children('div');
+                    if (childDiv.length > 0) {
+                        var childClass = childDiv.attr('class');
+                        $(td).addClass(childClass);
+                        childDiv.removeClass(childClass);
+                    }
+                }
+              }
+          },
+          {
+              type: 'natural',
+              targets: '_all',
+          }
+      ],
+      language: {
+        searchPlaceholder: "Search",
+        sSearch: "",
+        info: "_TOTAL_ {% if '1' in division.abr %}Wrestlers{% else %}Teams{% endif %}",
+        infoEmpty: "0 Wrestlers",
+        infoFiltered: "(_MAX_ total)",
+      },
+    })
+
+    // This add row highlighting
+    $('#division_table').addClass("display")
+  });
+
+</script>
+
+{% endblock content %}

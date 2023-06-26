@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Access Logs{% endblock title %}
+
+{% block content %}
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    {{ output|safe }}
+</div>
+
+<script>
+    // Use JavaScript or jQuery to update the href attribute of the anchor element
+    // based on the checked state of the checkbox
+    document.getElementById("db_clear_cb").addEventListener("change", function() {
+        var checkbox = document.getElementById("db_clear_cb");
+        var button = document.getElementById("db_clear");
+        if (checkbox.checked) {
+            button.href = "./clear"; // Update href when checkbox is checked
+        } else {
+            button.href = "#"; // Update href when checkbox is unchecked
+        }
+    });
+</script>
+
+{% endblock content %}

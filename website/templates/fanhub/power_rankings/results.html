@@ -1,0 +1,73 @@
+{% extends "fanhub/base.html" %}
+
+{% block fanhub_title %}Ranking Results{% endblock fanhub_title %}
+
+{% block fanhub_content %}
+
+{{ who_submitted|safe }}<br>
+
+{% if session.fanhub_admin %}
+<div class="centered" style="padding-top: 5px">
+    <input type="checkbox" id="db_clear_cb">
+    <a class="button" href="#" id="db_clear">Clear Submissions</a>
+</div>
+<script>
+    // Use JavaScript or jQuery to update the href attribute of the anchor element
+    // based on the checked state of the checkbox
+    document.getElementById("db_clear_cb").addEventListener("change", function() {
+        var checkbox = document.getElementById("db_clear_cb");
+        var button = document.getElementById("db_clear");
+        if (checkbox.checked) {
+            button.href = "./results/clear"; // Update href when checkbox is checked
+        } else {
+            button.href = "#"; // Update href when checkbox is unchecked
+        }
+    });
+</script>
+{% endif %}
+
+<div id="fanhub_results_total_points" style="">
+    <div>{{ total_points|safe }}</div>
+
+
+    <div class="centered" style="padding-top: 5px">
+        <input type="checkbox" id="show_individual_submissions" onchange="toggleSubmissions()">
+        <span class="">Show Individual Submissions</span>
+    </div>
+
+    <div id="individual_submissions" style="display: none">
+        {% for user, submission in submissions.items() %}
+            <table border="1">
+                <caption>{{ user }}</caption>
+                {% for title, self in submission.items() %}
+                {% if not (title == "username" or title == "datetime") %}
+                    <tr>
+                        <th>{{ title }}</th>
+                        <td>{{ self }}</td>
+                    </tr>
+                {% endif %}
+                {% endfor %}
+            </table>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+  function toggleSubmissions() {
+    var submissionsDiv = document.getElementById("individual_submissions");
+    var checkbox = document.getElementById("show_individual_submissions");
+
+    if (checkbox.checked) {
+      submissionsDiv.style.display = "block";
+    } else {
+      submissionsDiv.style.display = "none";
+    }
+  }
+</script>
+
+<style>
+#fanhub_results_total_points a:visited, #fanhub_results_total_points a:link {
+    color: white;
+}
+</style>
+{% endblock fanhub_content %}

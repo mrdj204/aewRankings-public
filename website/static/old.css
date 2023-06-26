@@ -1,0 +1,356 @@
+.button a:link, .button a:visited {
+  display: inline-block;
+  padding: 0.5em 1em;
+  background-color: #002900;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s;
+}
+
+.button a:hover {
+  background-color: #0069d9;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: #0f0;
+}
+
+.pad_bottom {
+    padding-bottom: 10px;
+}
+
+.small_text {
+    font-size: .83em;
+    font-weight: bold;
+}
+
+.bigtext {
+    font-size: 30px;
+    font-size: 1.5em;
+}
+
+.container {
+    display: inline-block;
+    justify-content: center;
+}
+
+.container2 {
+    display: inline-block;
+    text-align: right;
+}
+
+.container3 {
+    display: inline-block;
+    text-align: left;
+}
+
+/* everything below here is accounted for */
+
+#rankings a {
+    color: white;
+}
+
+.inrows {
+    display: inline-block;
+}
+
+span.red {
+    color: #FF2121
+}
+
+.Gold span.red {
+    color: #900
+}
+
+span.green {
+    color: #32FF32
+}
+
+body {
+    background-color: #001200;
+    color: white;
+    font-family: monospace;
+    font-size: 1.78em;
+}
+
+.hidden {
+    display: none
+}
+
+input {
+    color: white;
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.top_title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.dataTables_info {
+    padding-top: 0px !important;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #002a00;
+  z-index: 1;
+  left: 50%; /* Add this property to center horizontally */
+  transform: translateX(-50%); /* Add this property to center horizontally */
+}
+
+.dropdown-content a {
+  padding: 5px 10px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  color: #F00;
+}
+
+/* Unvisited links */
+/* Visited links */
+a:link, a:visited {
+  color: #0f0;
+  text-decoration: none;
+}
+
+/* Selected links */
+/* Mouse over links */
+a:hover, a:active {
+  color: #f00;
+  text-decoration: none;
+}
+
+#main_menu a:link, #main_menu a:visited {
+  color: #0f0;
+}
+
+#main_menu a:hover {
+  color: #f00;
+}
+
+#main_menu a.current-page {
+  color: #f00;
+  text-decoration: none;
+}
+
+#main_menu p.current-page {
+  color: #f00;
+  cursor: pointer;
+}
+
+#main_menu p {
+  color: #0f0;
+  cursor: pointer;
+}
+
+.main_menu {
+    margin-bottom: 10px;
+}
+
+#main_menu, #main_menu td {
+    border: none !important;
+}
+
+#footer {
+    background-color: #001200;
+    border-top: 2px solid #000000;
+    padding-top: 10px;
+    margin-bototm: 10px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+table {
+    margin: 0 auto;
+}
+
+.Elite_text {
+    color: #50C878;
+}
+
+.Gold_text {
+    color: gold;
+}
+
+.Silver_text {
+    color: silver;
+}
+
+.Jobber_text {
+    color: #CD7F32;
+}
+
+.Elite {
+    background-color: #27592D;
+    border: #27592D;
+    color: white;
+    font-weight: bold;
+}
+
+.Gold {
+    background-color: #B8860B;
+    border: #B8860B;
+    color: black;
+    font-weight: bold;
+}
+
+.Silver {
+    background-color: #71706e;
+    border: #71706e;
+    color: white;
+    font-weight: bold;
+}
+
+.Jobber {
+    background-color: #804a00;
+    border: #804a00;
+    color: white;
+}
+
+.Unranked {
+    background-color: #222;
+    border-top: white 1px solid;
+    border-bottom: white 1px solid;
+    color: white;
+}
+
+td, th {
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    font-size: .78em;
+    white-space: nowrap;
+}
+
+#match_history td:nth-child(6) {
+  white-space: normal;
+}
+
+#match_history td {
+    font-size: .5em;
+}
+
+.squash_html {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  padding: 5px;
+}
+
+table.dataTable {
+  width: auto;
+}
+
+table.dataTable thead th {
+  text-align: center; /* Add this CSS to center text in header cells */
+}
+
+div.dataTables_wrapper  div.dataTables_filter {
+  width: 100%;
+  float: none;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.centered {
+    text-align: center;
+}
+
+.nomargin {
+    margin: 0;
+}
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #003300;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+    background-color: #004400;
+}
+
+.active_menu_button {
+    background-color: #000;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: #002a00;
+    color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    text-align: center;
+    font-color: white;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.select2-search { background-color: #002a00; }
+
+.select2-search input {
+ color: #fff;
+ background-color: #002a00
+}
+
+.select2-results {
+    background-color: #002a00;
+    font-size: .75em;
+}
+
+.select2-selection__rendered {
+    background-color: #002a00;
+    color: white !important;
+}
+.select2-results__option  {
+    color: white;
+}
+
+div.fanhub_rcv_options {
+    border-top: 1px white dashed;
+    padding: 25px;
+    width: max-content;
+    margin-right: auto;
+    margin-left: auto;
+}

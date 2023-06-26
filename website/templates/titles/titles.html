@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Titles{% endblock title %}
+
+{% block content %}
+{{ titles|safe }}
+<!-- enable datatables -->
+<script>
+  $(document).ready( function () {
+    $('#titles_table').DataTable({
+      searching: false,
+      info: false,
+      autoWidth: true,
+      paging: false,
+      order: [[1, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '10px');
+          $(td).css('padding-right', '10px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }]
+    });
+  });
+</script>
+<br>
+
+{{ reigns|safe }}
+<!-- enable datatables -->
+<script>
+  $(document).ready( function () {
+    $('#reigns_table').DataTable({
+      searching: false,
+      info: false,
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[2, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '10px');
+          $(td).css('padding-right', '10px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }]
+    });
+  });
+</script>
+<br>
+
+{{ owners|safe }}
+<!-- enable datatables -->
+<script>
+  $(document).ready( function () {
+    $('#owners_table').DataTable({
+      searching: false,
+      info: false,
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[0, 'asc'], [7, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '10px');
+          $(td).css('padding-right', '10px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }]
+    });
+  });
+</script>
+{% endblock content %}

@@ -1,0 +1,46 @@
+<table><tr>
+    <td style="padding-right: 10px">
+        {% for title in w1titles %}<p class="nomargin small_text">{{title}}</p>{% endfor %}
+        {% if not wrestler1.is_team %}
+            <p class="nomargin bigtext">{{wrestler1}}</p>
+        {% elif wrestler1.name %}
+            <p class="bigtext nomargin">{{ wrestler1.name }}</p>
+            <p class="nomargin">({{ wrestler1.wrestlers }})</p>
+        {% else %}
+            <p class="bigtext nomargin">{{ wrestler1.wrestlers }}</p>
+        {% endif %}
+        <p class="nomargin bigtext">{{record_vs[0]}} win(s)</p>
+    </td>
+    <td style="padding-left: 10px">
+        {% for title in w2titles %}<p class="nomargin small_text">{{title}}</p>{% endfor %}
+        {% if wrestler2.name %}
+            <p class="bigtext nomargin">{{ wrestler2.name }}</p>
+            <p class="nomargin">({{ wrestler2.wrestlers }})</p>
+        {% else %}
+            <p class="bigtext nomargin">{{ wrestler2.wrestlers }}</p>
+        {% endif %}
+        <p class="nomargin bigtext">{{record_vs[1]}} win(s)</p>
+    </td>
+</tr></table>
+
+<br>
+
+<table border="1">
+    <tr><td></td><td>{{wrestler1}} ({{ w1_rank }})</td><td>{{wrestler2}} ({{ w2_rank }})</td></tr>
+    <tr><td>MMR (Win%)</td><td>{{w1mmr}} ({{w1_win_chance}})</td><td>{{w2mmr}} ({{w2_win_chance}})</td></tr>
+    <tr><td>All-Time Record</td><td>{{w1record}}</td><td>{{w2record}}</td></tr>
+    <tr><td>{{current_year}} Record</td><td>{{w1_current_record}}</td><td>{{w2_current_record}}</td></tr>
+</table><br>
+
+{% if matches_vs %}
+<table border="1">
+    <tr><th>Date</th><th>Event</th><th>Title</th><th>Match Type</th><th>Winner (MMR)</th><th>+/-</th><th>Loser (MMR)</th></tr>
+    {% for match in matches_vs %}
+        <tr>
+            {% for key, element in match.items() %}
+                <td>{{element}}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table><br>
+{% endif %}

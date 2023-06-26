@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Test{% endblock title %}
+
+{% block content %}
+
+{{ output|safe }}
+<script>
+  document.body.style.backgroundColor = "black";
+</script>
+<style>
+  table.dataTable tbody tr.even {
+    background-color: #111; /* Set the background color for even rows */
+  }
+
+  table.dataTable tbody tr.odd {
+    background-color: #222; /* Set the background color for odd rows */
+  }
+</style>
+<script>
+  $(document).ready( function () {
+    $('#reigns4').DataTable({
+      searching: false,
+      info: false,
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[0, 'asc'], [7, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '10px');
+          $(td).css('padding-right', '10px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }]
+    });
+  });
+</script>
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+{{ output|safe }}
+<script>
+  $(document).ready( function () {
+    $('#stats_table').DataTable({
+      "dom": '<"top"if>rt<"bottom"><"clear">',
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[1, 'desc'], [2, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '0px');
+          $(td).css('padding-right', '0px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }],
+      language: {
+        searchPlaceholder: "Search",
+        sSearch: "",
+        info: "_TOTAL_ {% if '1' in division.abr %}Wrestlers{% else %}Teams{% endif %}",
+        infoEmpty: "0 Wrestlers",
+        infoFiltered: "(_MAX_ total)",
+      },
+    });
+  });
+</script>

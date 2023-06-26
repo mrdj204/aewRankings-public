@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Rankings (Extended){% endblock title %}
+
+{% block header %}
+<style>
+  body {
+    background-color: black;
+  }
+  h3, h6 {
+    background-color: #002a00;
+  }
+  .accordion {
+    background-color: #003300;
+    width: 100%;
+    color: white;
+    text-align: center;
+    border: none;
+    outline: none;
+  }
+  .panel2 {
+    overflow-y: hidden;
+    padding-bottom: 5px;
+    padding-top: 20px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-color: white;
+  }
+  .inrows {
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+</style>
+{% endblock header %}
+
+{% block content %}
+
+{% for division in divisions %}
+  <button class="accordion"><h1>{{ division["name"] }}</h1></button>
+  <div class="panel2">
+    {% for key, data in division.mmr_keys.items() %}
+      {% if "noreset" not in key %}
+        <div class="inrows">
+      {% endif %}
+      <div class="inrows">
+        <h3 class="nomargin">{{key}}</h3>
+        <h6 class="nomargin">Top 15</h6>
+        <table border=1 width="100%">
+          <thead><tr><th>Rank</th><th>Wrestler</th><th>Rating</th></tr></thead>
+          {% for wrestler in data.wrestlers %}
+            <tr><td>{{loop.index}}</td><td>{{wrestler.name}}</td><td>{{wrestler.mmr}}</td></tr>
+          {% endfor %}
+        </table>
+        <h6 class="nomargin">Yearly Record</h6>
+        <table border="1" width="100%">
+          <tr><th>Year</th><th>Wrestler</th><th>Rating</th></tr>
+          {% for max_mmr in data.max_mmrs%}
+            <tr><td>{{max_mmr.year}}</td><td>{{max_mmr.name}}</td><td>{{max_mmr.rating}}</td></tr>
+          {% endfor %}
+        </table>
+      </div>
+      {% if "noreset" in key %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endfor %}
+
+{% endblock content %}

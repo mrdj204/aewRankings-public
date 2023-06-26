@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Rankings{% endblock title %}
+
+{% block header %}
+<style>
+    body {
+        background-color: black;
+    }
+
+    #rankings a {
+        color: white;
+    }
+
+    td {
+        padding: 5px 10px;
+    }
+
+    .name {
+        font-weight: bold;
+    }
+
+    .wrestlers {
+        font-size: 12px;
+    }
+
+    #rankings a.gold:link, #rankings a.gold:visited {
+        color: gold;
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<div id="rankings">
+    <h2 class="centered nomargin">Top 10 Rankings</h2>
+    <h6 class="centered nomargin pad_bottom">{{ updated_on|safe }}</h6>
+
+    {% for division, table in output.items() %}
+        <div style="padding: 20px 0px">
+            <h2 class="centered nomargin">{{ division }}</h2>
+            {{ table|safe }}
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

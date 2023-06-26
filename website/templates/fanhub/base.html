@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}FanHub - {% block fanhub_title %}Home{% endblock fanhub_title %}{% endblock title %}
+
+{% block header %}
+<style>
+
+div.fanhub_rcv_options {
+    border-top: 1px white dashed;
+    padding: 25px;
+    width: max-content;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<div style="text-align: center">
+    <a href="/fanhub"><h1>AEW Fan Hub</h1></a>
+
+    {% block fanhub_content %}
+
+    <h5 class="nomargin">Social Media</h5>
+    <a href="http://aewfanhub.com/">Website</a>
+    | <a href="https://discord.gg/aewfans">Discord</a>
+    | <a href="https://www.reddit.com/r/AEWFanHub/">Reddit</a>
+    | <a href="http://twitter.com/aewfanhub">Twitter</a>
+    | <a href="https://www.youtube.com/@aewfanhub">YouTube</a>
+    <br><br>
+    <h5 class="nomargin">Power Rankings</h5>
+    <a href="/fanhub/rankings/current" id="fanhub_rankings">Current Rankings</a>
+    {% if session.fanhub_elite %}
+    | <a href="/fanhub/rankings/submit/" id="fanhub_submit">Submit Rankings</a>
+    | <a href="/fanhub/rankings/results/" id="fanhub_results">Submission Results</a>
+    {% endif %}
+
+    {% endblock fanhub_content %}
+
+</div>
+
+{% endblock content %}

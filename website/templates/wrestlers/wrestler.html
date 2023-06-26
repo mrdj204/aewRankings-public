@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+
+{% block title %}{{ name }}{% endblock title %}
+
+{% block content %}
+
+<!-- Wrestler Header -->
+<div style="margin-bottom: 10px; padding-top: 0px">
+    <!-- Show any titles -->
+    {% if titles %}
+        {% for title in titles %}<h5 class="{{rank_division_css_text}} centered nomargin">{{title}}</h5>{% endfor %}
+    {% endif %}
+
+    {% if is_team %}
+        {% if name %}
+            <!-- Has team name -->
+            <h1 class="{{rank_division_css_text}} centered nomargin">{{ name }}</h1>
+            <h3 class="{{rank_division_css_text}} centered nomargin">({{ wrestlers }})</h3>
+        {% else %}
+            <!-- No team name -->
+            <h1 class="{{rank_division_css_text}} centered nomargin">{{ wrestlers }}</h1>
+        {% endif %}
+    {% else %}
+        <!-- Not a team -->
+        <h2 class="{{rank_division_css_text}} centered nomargin">{{ name }}</h2>
+    {% endif %}
+
+    <!-- Rank / Record / MMR -->
+    <!-- TODO: Add alltime rank / MMR? -->
+    <h4 class="{{rank_division_css_text}} centered nomargin">{{ rank }} &#9679;
+        <div style="display: inline-block;">{{ all_time_record }}<br>{{ record }}</div>
+        &#9679; {{stats.alltime.main_mmr}}</h4>
+    <h4 class="{{rank_division_css_text}} centered nomargin"></h4>
+</div>
+
+{% if aliases %}
+<button class="accordion"><h1>Aliases</h1></button>
+  <div class="panel"><br>
+      {{ aliases|safe }}
+    <br><br>
+  </div>
+{% endif %}
+
+<button class="accordion"><h1>Stats</h1></button>
+  <div class="panel"><br>
+          {{ stats_html|safe }}
+    {% for stat_html in stats_html %}
+    {% endfor %}
+    <br><br>
+  </div>
+
+{% if titles %}
+    <button class="accordion"><h1>Title History</h1></button>
+    <div class="panel">
+        <br>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date Won</th>
+                    <th>Reign</th>
+                    <th>Defenses</th>
+                    <th>Prestidge</th>
+                    <th>MMR</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for title in title_history %}
+                    <tr>
+                        {% for key, element in title.items() %}
+                            {% if key == "owner" %}
+                                <td>
+                                    {% if element.is_team == False %}
+                                        <a href="../wrestlers/{{element.name}}">{{ element.name }}</a>
+                                    {% else %}
+                                        <a href="../wrestlers/{{element.full_name}}">
+                                            {% if element.name %}
+                                                <b>{{ element.name }}</b><br>
+                                                <p class="nomargin" style="font-size: 12px">({{ element.wrestlers }})</p>
+                                            {% else %}
+                                                {{ element.full_name }}
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            {% elif key == "reign" and element == None %}
+                                <td>{{ (datetime.today() - datetime.strptime(title.date, '%Y-%m-%d')).days }} days</td>
+                            {% elif key == "matches" or key == "reign_int" %}
+                            {% else %}
+                                <td>{{element}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% for title in title_match_history %}
+            <br>
+            <table border="1">
+                <caption>{{ title.title }}</caption>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Match Type</th>
+                        <th>Winner</th>
+                        <th>Loser</th>
+                        <th>Total Def</th>
+                        <th>Cur Def</th>
+                        <th>Prestidge</th>
+                        <th>MMR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for match in title.matches %}
+                        {% if match.info %}
+                        {% else %}
+                            <tr>
+                                {% for key, element in match.items() %}
+                                    {% if key == "winner" or key == "loser" %}
+                                        <td>
+                                            {% if element.is_team == False %}
+                                                <a href="../wrestlers/{{element.name}}">{{ element.name }}</a>
+                                            {% else %}
+                                                <a href="../wrestlers/{{element.full_name}}">
+                                                    {% if element.name %}
+                                                        <b>{{ element.name }}</b><br>
+                                                        <p class="nomargin" style="font-size: 12px">({{ element.wrestlers }})</p>
+                                                    {% else %}
+                                                        {{ element.full_name }}
+                                                    {% endif %}
+                                                </a>
+                                            {% endif %}
+                                        </td>
+                                    {% elif key == "match_type" %}
+                                        <td style="max-width: 250px; white-space: normal;">{{ element }}</td>
+                                    {% else %}
+                                        <td>{{ element }}</td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+        <br>
+    </div>
+{% endif %}
+
+<button class="accordion"><h1>Rank & MMR History</h1></button>
+  <div class="panel"><br>
+    <table border="1">
+      <tr>
+        <th>Date</th>
+        <th>Event</th>
+        <th style="padding: 0px" colspan="2">
+          <table width="100%">
+            <tr><td colspan="2">Solo</td></tr>
+            <tr><td>Rank</td><td>MMR</td></tr>
+          </table>
+        </th>
+        <th style="padding: 0px" colspan="2">
+          <table width="100%">
+            <tr><td colspan="2">Duos</td></tr>
+            <tr><td>Rank</td><td>MMR</td></tr>
+          </table>
+        </th>
+        <th style="padding: 0px" colspan="2">
+          <table width="100%">
+            <tr><td colspan="2">Trios</td></tr>
+            <tr><td>Rank</td><td>MMR</td></tr>
+          </table>
+        </th>
+        <th style="padding: 0px" colspan="2">
+          <table width="100%">
+            <tr><td colspan="2">All</td></tr>
+            <tr><td>Rank</td><td>MMR</td></tr>
+          </table>
+        </th>
+      </tr>
+      {% for date, rankings in rank_history.items() %}
+        <tr>
+          <td>{{ date }}</td>
+          <td>{{ rankings.event }}</td>
+          {% for key in ["solo_mmr", "duos_mmr", "trios_mmr", "total_mmr"] %}
+            {% if rankings[key] %}
+              <td class="{{ rankings[key].division }}">{{ rankings[key].rank }}</td>
+              <td class="{{ rankings[key].division }}">{{ rankings[key].mmr }}</td>
+            {% else %}
+              <td colspan="2"></td>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </table><br>
+  </div>
+
+<button class="accordion"><h1>Match History</h1></button>
+  <div class="panel"><br>
+    <table id="match_history" border="1">
+      <tr><th>Date</th><th>Event</th><th>DIV</th><th>Title Match</th><th>Match Type</th><th>Opponent</th>
+          <th>Opp MMR</th><th>+/-</th><th>MMR</th><th>W/L</th><th>Streak</th></tr>
+      {% for match in match_history %}
+
+          {% if match["squash"] %}
+            <tr><td colspan="13">{{match["html"]|safe}}</td></tr>
+          {% else %}
+            <tr>
+              {% for key, element in match.items() %}
+                  {% if key == "opponent" and element != "-" %}
+                    {% if element is iterable %}
+                      <td>
+                        {% for v in element %}
+                          {% if v is string %}
+                            <p class="nomargin">{{ v }}</p>
+                          {% else %}
+                            <p class="nomargin"><a href="./{{v.full_name}}">{{ v }}</a></p>
+                          {% endif %}
+                        {% endfor %}
+                      </td>
+                    {% else %}
+                      <td>
+                        <a href="./{{ element.full_name }}">
+                          <p class="nomargin">
+                            {{ element }}
+                            {% if element.name %}
+                              </p>
+                              <p class="nomargin">
+                                ({{ element.wrestlers }})
+                            {% endif %}
+                          </p>
+                        </a>
+                      </td>
+                    {% endif %}
+                  {% elif element is mapping %}
+                    <td>
+                      {% for k, v in element.items() %}
+                        <p class="nomargin">{{k}}: {{v}}</p>
+                      {% endfor %}
+                    </td>
+                  {% elif key == "placements" %}
+                  {% elif element == "AEW Dynamite #16: Chris Jericho's Rock n Wrestling Rager at Sea" %}
+                    <td>
+                      AEW Dynamite #16:<br>
+                      Chris Jericho's<br>
+                      Rock n Wrestling Rager at Sea
+                    </td>
+                  {% elif key == "match_type" or key == "event" %}
+                    <td>
+                      {% for s in element.split(":") %}
+                        <p class="nomargin">{{ s }}{% if not loop.last %}:{% endif %}</p>
+                      {% endfor %}
+                    </td>
+                  {% else %}
+                    <td>{{element}}</td>
+                  {% endif %}
+              {% endfor %}
+            </tr>
+          {% endif %}
+      {% endfor %}
+    </table><br>
+  </div>
+
+<style>
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+    background-color: #003300;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border: none;
+    outline: none;
+    transition: 0.4s;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.accordion:hover {
+    background-color: #004400;
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+    padding: 0 18px;
+    background-color: #002a00;
+    color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    text-align: center;
+    font-color: white;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+#match_history td:nth-child(6) {
+  white-space: normal;
+}
+
+#match_history td {
+    font-size: .5em;
+}
+
+.squash_html {
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  padding: 5px;
+}
+</style>
+
+<!-- depreciated matchup vs -->
+<!-- <button class="accordion"><h1>Matchup VS</h1></button>
+  <div class="panel" style="text-align: center;">
+      <br>
+      <select id="self-select">
+          <option value="" class="centered" selected>Select Wrestler</option>
+      {% for self in all_contestants %}
+          <option value="{{ self.name }}" class="centered">{{ self.name }}</option>
+      {% endfor %}
+    </select><br><br>
+
+    <div id="matchup"><div></div></div>
+  </div>  -->
+
+<!-- accordion script -->
+<script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var panel = this.nextElementSibling;
+    if (panel.style.maxHeight) {
+      panel.style.maxHeight = null;
+    } else {
+      //panel.style.maxHeight = panel.scrollHeight + "px";
+      panel.style.maxHeight = "80vh";
+      setTimeout(function() {
+        var accordion = panel.previousElementSibling;
+        accordion.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 250); // adjust delay as needed
+    }
+  });
+}
+</script>
+
+<!-- matchup vs script -->
+<script>
+var path = window.location.pathname;
+var currentWrestler = path.split("/")[2];
+const select = document.getElementById("self-select");
+select.addEventListener("change", function() {
+  const selectedWrestler = select.options[select.selectedIndex].value;
+  const matchupDiv = document.getElementById("matchup");
+  const panel = matchupDiv.parentElement;
+  matchupDiv.style.display = "block";
+  matchupDiv.innerHTML = "Loading...";
+  fetch("/w/" + currentWrestler + "/" + selectedWrestler)
+    .then(response => response.text())
+    .then(text => {
+      matchupDiv.innerHTML = text;
+      panel.style.maxHeight = panel.scrollHeight + "px";
+    });
+});
+
+</script>
+
+{% endblock content %}

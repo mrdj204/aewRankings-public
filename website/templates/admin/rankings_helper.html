@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block title %}Rankings (Helper){% endblock title %}
+
+{% block header %}
+<style>
+    .selectors {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .selectors .select2-container {
+        color: red;
+        margin-top: 15px;
+    }
+    #selected-wrestlers {
+        margin-top: 15px;
+    }
+</style>
+{% endblock header %}
+
+{% block content %}
+
+<!-- champions table -->
+{{ champions|safe }}
+
+<!-- selectors -->
+<div class="selectors">
+    <select id="singles" name="form_data[wrestler]">
+    <option value="">Singles</option>
+    {{ singles|safe }}
+    </select>
+    <select id="duos" name="form_data[wrestler]">
+    <option value="">Duos</option>
+    {{ duos|safe }}
+    </select>
+    <select id="trios" name="form_data[wrestler]">
+    <option value="">Trios</option>
+    {{ trios|safe }}
+    </select>
+</div>
+
+<!-- selected wrestler table -->
+<table id="selected-wrestlers" class="display">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Helper</th>
+            <th>Rank</th>
+            <th>Dif</th>
+            <th>MMR</th>
+            <th>Record</th>
+            <th>Matches</th>
+            <th>Rank Division</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Populated dynamically using JavaScript -->
+    </tbody>
+</table>
+
+<!-- champions datatable -->
+<script>
+document.body.style.backgroundColor = "black";
+
+$.fn.dataTable.naturalSort = function ( a, b ) {
+    return naturalSort(a,b);
+};
+
+$(document).ready( function () {
+    $('#champions').DataTable({
+        autoWidth: true,
+        "paging": false,
+        searching: false,
+        info: false,
+        "order": [[3, 'desc']],
+        "columnDefs": [{
+            "targets": '_all',
+            "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).css('padding-left', '10px'),
+                $(td).css('padding-right', '10px'),
+                $(td).css('padding-top', '0px'),
+                $(td).css('padding-bottom', '0px')
+            }
+        },
+        {
+            "type": 'natural',
+            "targets": '_all',
+        }],
+        language: {
+            searchPlaceholder: "Search",
+            "sSearch": ""
+        }
+    });
+});
+</script>
+
+<!-- selected wrestlers datatable -->
+<script>
+$(document).ready( function () {
+    $('#selected-wrestlers').DataTable({
+        autoWidth: true,
+        "paging": false,
+        searching: false,
+        info: false,
+        "order": [[0, 'asc']], // Sort by the insertion order column in ascending order
+        "columnDefs": [{
+            "targets": [0],
+            "visible": false, // Hide the "Insert Order" column
+            "searchable": false
+        },{
+            "targets": '_all',
+            "createdCell": function (td, cellData, rowData, row, col) {
+                $(td).css('padding-left', '10px'),
+                $(td).css('padding-right', '10px'),
+                $(td).css('padding-top', '0px'),
+                $(td).css('padding-bottom', '0px')
+            }
+        },
+        {
+            "type": 'natural',
+            "targets": '_all',
+        }],
+        language: {
+            searchPlaceholder: "Search",
+            "sSearch": ""
+        }
+    });
+});
+</script>
+
+<!-- copy helper to clipboard on click -->
+<script>
+$(document).ready(function() {
+  // Attach click event listener to a parent element that exists on the page
+  // Use event delegation to listen for events that bubble up from the cells
+  $(document).on('click', '.dataTable tbody td:nth-child(2)', function() {
+    copyContentToClipboard($(this).html());
+  });
+
+  // Function to copy content to clipboard
+  function copyContentToClipboard(content) {
+    // Create a temporary textarea element
+    var textarea = document.createElement('textarea');
+    textarea.value = content.replaceAll("<br>", "\r\n");
+
+    // Append the textarea to the body
+    document.body.appendChild(textarea);
+
+    // Select the contents of the textarea
+    textarea.select();
+
+    // If the Clipboard API is not available, fall back to the deprecated execCommand method
+    document.execCommand('copy');
+
+    // Alert the user that the content has been copied
+    // alert('Copied to clipboard:\n' + content);
+
+    // Remove the temporary textarea
+    document.body.removeChild(textarea);
+  }
+
+  // Dynamically create a cell and append it to a table
+  var newCell = $('<td>').text('Dynamic Cell');
+  $('.dataTable tbody').append($('<tr>').append(newCell));
+});
+</script>
+
+<!-- select2 -->
+<script>
+$(document).ready(function() {
+    $('select').select2({
+        minimumResultsForSearch: 10,
+        tags: true,
+    }).on('select2:select', function(e) {
+        var formData = new FormData();
+        formData.append('wrestler_name', e.params.data.text);
+
+        // Send selected wrestler to server via POST request
+        fetch('/admin/rankings_helper', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to add wrestler. Status: ' + response.status);
+            }
+            return response.json(); // Parse the response as JSON
+        })
+        .then(data => {
+
+            // Create an array from the dictionary values
+            var wrestlerData = Object.values(data);
+            wrestlerData.unshift($('#selected-wrestlers').DataTable().data().count() + 1); // Insert the insertion order at the beginning of the array
+
+            // Add the array as a row to the table
+
+            var table = $('#selected-wrestlers').DataTable();
+            table.row.add(wrestlerData).draw();
+
+            // Clear the Select2 element
+            $(e.target).val(null).trigger('change');
+        })
+        .catch(error => {
+            alert('Failed to add wrestler.');
+        });
+    });
+
+    $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    });
+});
+</script>
+
+{% endblock content %}

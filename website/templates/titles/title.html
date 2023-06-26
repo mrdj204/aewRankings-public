@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}{{ name }}{% endblock title %}
+
+{% block content %}
+<h1 class="centered nomargin Elite_text" style="padding-bottom: 15px">{{ championship }}</h1>
+
+{{ owners|safe }}
+<!-- enable datatables -->
+<script>
+  $(document).ready( function () {
+    $('#owners_table').DataTable({
+      "dom": '<"top_title"if>rt<"bottom"><"clear">',
+      searching: false,
+      fixedHeader: true,
+      autoWidth: true,
+      paging: false,
+      order: [[1, 'desc']],
+      columnDefs: [{
+        targets: '_all',
+        createdCell: function (td, cellData, rowData, row, col) {
+          $(td).css('padding-left', '10px');
+          $(td).css('padding-right', '10px');
+          $(td).css('padding-top', '0px');
+          $(td).css('padding-bottom', '0px');
+        }
+      },
+      {
+        type: 'natural',
+        targets: '_all'
+      }],
+      language: {
+        info: "Owner History<br>Total Owners: _TOTAL_",
+        infoEmpty: "Showing 0 to 0 of 0 entries",
+      },
+    });
+  });
+  </script>
+<br>
+
+{{ matches|safe }}
+<!-- enable datatables -->
+<script>
+$(document).ready( function () {
+$('#matches_table').DataTable({
+  "dom": '<"top_title"if>rt<"bottom"><"clear">',
+  searching: false,
+  fixedHeader: true,
+  autoWidth: true,
+  paging: false,
+  order: [[0, 'desc']],
+  columnDefs: [{
+    targets: '_all',
+    createdCell: function (td, cellData, rowData, row, col) {
+      $(td).css('padding-left', '10px');
+      $(td).css('padding-right', '10px');
+      $(td).css('padding-top', '0px');
+      $(td).css('padding-bottom', '0px');
+    }
+  },
+  {
+    type: 'natural',
+    targets: '_all'
+  }],
+  language: {
+    info: "Match History<br>Total Matches: _TOTAL_",
+    infoEmpty: "Showing 0 to 0 of 0 entries",
+  },
+});
+});
+</script>
+{% endblock content %}

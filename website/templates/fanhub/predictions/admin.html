@@ -1,0 +1,23 @@
+{% extends "fanhub/base.html" %}
+
+{% block fanhub_content %}
+
+<div class="centered" style="padding-top: 5px">
+    <input type="checkbox" id="db_clear_cb">
+    <a class="button" href="#" id="db_clear">Clear Entries</a>
+</div>
+<script>
+    // Use JavaScript or jQuery to update the href attribute of the anchor element
+    // based on the checked state of the checkbox
+    document.getElementById("db_clear_cb").addEventListener("change", function() {
+        var checkbox = document.getElementById("db_clear_cb");
+        var button = document.getElementById("db_clear");
+        if (checkbox.checked) {
+            button.href = "./predictions/clear"; // Update href when checkbox is checked
+        } else {
+            button.href = "#"; // Update href when checkbox is unchecked
+        }
+    });
+</script>
+
+{% endblock fanhub_content %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ{% endblock title %}
+
+{% block content %}
+    <div style="display: flex; justify-content: center;">
+        <div style="width: 33%; min-width: 600px">
+            <h1 style="text-align: center">FAQ</h1>
+            <div style="text-align: left;">
+                <p class="nomargin">Q: What is the 'Alltime' prefix?</p>
+                <p class="nomargin">A: The MMR follows AEW's yearly reset and squashes everyone's MMR towards 1500 at the start of the year. The 'alltime' prefix is what their MMR would be if the yearly reset never happened.</p>
+                <br>
+                <p class="nomargin">Q: What is MMR?</p>
+                <p class="nomargin">A: MMR, or Matchmaking Rating, is an ELO Rating system used to measure a player's skill level in competitive games. It's commonly used in online multiplayer games to match players with opponents of similar skill levels. MMR is determined based on a player's performance in matches, such as whether they win or lose, as well as the skill level of the opponents they face. The more skilled the opponents are, the more MMR a player can gain by winning, and the less MMR they can lose by losing. MMR is used to ensure that matches are fair and competitive, with players of similar skill levels facing off against each other. As a player's MMR increases, they will be matched against increasingly skilled opponents, which can make for more challenging and exciting gameplay.</p>
+                <br>
+                <p class="nomargin">Q: What are Elo Rankings?</p>
+                <p class="nomargin">A: Elo rankings are a system used to rank the relative skill levels of players in competitive games. The system was originally developed for chess, but has since been adapted for other games like video games, sports, and even board games. The basic idea is that each player is assigned a rating based on their performance, and then gains or loses points based on the outcome of their matches against other players with different ratings. The higher a player's rating, the more skilled they are considered to be, and vice versa. Elo rankings are used to create fair and competitive matches, as well as to track player progress over time.</p>
+                <br>
+                <p class="nomargin">Q: When are ranks updated?</p>
+                <p class="nomargin">A: Ranks update after PPV and Dynamite matches are updated.</p>
+                <br>
+                <p class="nomargin">Q: When are matches updated?</p>
+                <p class="nomargin">A: Usually the day after they air.</p>
+                <br>
+                <p class="nomargin">Q: Why are there missing matches?</p>
+                <p class="nomargin">A: This app currently only tracks sanctioned/ranked singles, duos, and trios matches that have aired on an AEW broadcast.</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

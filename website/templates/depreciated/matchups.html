@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Matchups{% endblock title %}
+
+{% block content %}
+<div id="matchups" class="centered pad_bottom">
+<label for="num-selectors">Number of Matchups:</label>
+<select id="num-selectors">
+    <option value="0">#</option>
+    {% for i in range(1, 21) %}
+        <option value="{{ i }}">{{ i }}</option>
+    {% endfor %}
+</select>
+</div>
+    <div id="selectors-container" class="centered"></div>
+
+    <script>
+        const numSelectors = document.querySelector("#num-selectors");
+        const selectorsContainer = document.querySelector("#selectors-container");
+
+        async function get_stats(division, w1, w2, w3, w4, target_div) {
+            target_div.innerHTML = "Loading...";
+            const response = await fetch(`/matchups/${division}/${w1}/${w2}/${w3}/${w4}`);
+            const data = await response.json();
+            target_div.innerHTML = data.wrestlers;
+        }
+
+        numSelectors.addEventListener("change", (event) => {
+
+        });
+    </script>
+
+<script>
+$(document).ready(function() {
+  $('select').select2({
+      minimumResultsForSearch: 10,
+    });
+ $(document).on('select2:open', () => {
+    document.querySelector('.select2-search__field').focus();
+  });
+});
+
+$('#num-selectors').on('select2:select', function(e) {
+  const num = e.params.data.id;
+  const selectorsContainer = document.getElementById("selectors-container");
+  selectorsContainer.innerHTML = "";
+
+  for (let i = 0; i < num; i++) {
+    const divisionSelector = document.createElement("select");
+    divisionSelector.innerHTML = `
+      <option value="">Div</option>
+      {% for name, abr in divisions.items() %}
+      <option value="{{ abr }}">{{ name }}</option>
+      {% endfor %}
+    `;
+
+    const wrestlerSelector = document.createElement("select");
+    const wrestlerSelector2 = document.createElement("select");
+    const wrestlerSelector3 = document.createElement("select");
+    const wrestlerSelector4 = document.createElement("select");
+
+    const wrestlerDiv = document.createElement("div");
+
+    const selectorWrapper = document.createElement("div");
+
+    selectorWrapper.appendChild(divisionSelector);
+
+    selectorWrapper.appendChild(wrestlerSelector);
+    selectorWrapper.appendChild(wrestlerSelector2);
+    selectorWrapper.appendChild(wrestlerSelector3);
+    selectorWrapper.appendChild(wrestlerSelector4);
+
+    selectorWrapper.appendChild(wrestlerDiv);
+
+    selectorsContainer.appendChild(selectorWrapper);
+
+    var style = document.createElement('style');
+    style.innerHTML = `
+        .select2-container {
+            min-width: 100px;
+        }
+    `;
+    document.head.appendChild(style);
+
+    $('select').select2();
+
+    $(divisionSelector).on('select2:select', async function() {
+      const division = $(this).val();
+      const response = await fetch(`/matchups/division/${division}`);
+      const data = await response.json();
+      const wrestler_list = data.wrestlers.map(self => `<option value="${self}">${self}</option>`).join("");
+      $(wrestlerSelector).html(wrestler_list);
+      $(wrestlerSelector2).html(wrestler_list);
+      $(wrestlerSelector3).html(wrestler_list);
+      $(wrestlerSelector4).html(wrestler_list);
+      $('select').select2();
+      $('select').on('select2:select', function() {
+        get_stats(division, $(wrestlerSelector).val(), $(wrestlerSelector2).val(), $(wrestlerSelector3).val(), $(wrestlerSelector4).val(), wrestlerDiv);
+      });
+    });
+  }
+});
+</script>
+
+{% endblock content %}
