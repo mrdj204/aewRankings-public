@@ -197,68 +197,7 @@
 
 <button class="accordion"><h1>Match History</h1></button>
   <div class="panel"><br>
-    <table id="match_history" border="1">
-      <tr><th>Date</th><th>Event</th><th>DIV</th><th>Title Match</th><th>Match Type</th><th>Opponent</th>
-          <th>Opp MMR</th><th>+/-</th><th>MMR</th><th>W/L</th><th>Streak</th></tr>
-      {% for match in match_history %}
-
-          {% if match["squash"] %}
-            <tr><td colspan="13">{{match["html"]|safe}}</td></tr>
-          {% else %}
-            <tr>
-              {% for key, element in match.items() %}
-                  {% if key == "opponent" and element != "-" %}
-                    {% if element is iterable %}
-                      <td>
-                        {% for v in element %}
-                          {% if v is string %}
-                            <p class="nomargin">{{ v }}</p>
-                          {% else %}
-                            <p class="nomargin"><a href="./{{v.full_name}}">{{ v }}</a></p>
-                          {% endif %}
-                        {% endfor %}
-                      </td>
-                    {% else %}
-                      <td>
-                        <a href="./{{ element.full_name }}">
-                          <p class="nomargin">
-                            {{ element }}
-                            {% if element.name %}
-                              </p>
-                              <p class="nomargin">
-                                ({{ element.wrestlers }})
-                            {% endif %}
-                          </p>
-                        </a>
-                      </td>
-                    {% endif %}
-                  {% elif element is mapping %}
-                    <td>
-                      {% for k, v in element.items() %}
-                        <p class="nomargin">{{k}}: {{v}}</p>
-                      {% endfor %}
-                    </td>
-                  {% elif key == "placements" %}
-                  {% elif element == "AEW Dynamite #16: Chris Jericho's Rock n Wrestling Rager at Sea" %}
-                    <td>
-                      AEW Dynamite #16:<br>
-                      Chris Jericho's<br>
-                      Rock n Wrestling Rager at Sea
-                    </td>
-                  {% elif key == "match_type" or key == "event" %}
-                    <td>
-                      {% for s in element.split(":") %}
-                        <p class="nomargin">{{ s }}{% if not loop.last %}:{% endif %}</p>
-                      {% endfor %}
-                    </td>
-                  {% else %}
-                    <td>{{element}}</td>
-                  {% endif %}
-              {% endfor %}
-            </tr>
-          {% endif %}
-      {% endfor %}
-    </table><br>
+    {{ match_history|safe }}<br>
   </div>
 
 <style>
@@ -291,14 +230,6 @@
     font-color: white;
     overflow-x: auto;
     overflow-y: auto;
-}
-
-#match_history td:nth-child(6) {
-  white-space: normal;
-}
-
-#match_history td {
-    font-size: .5em;
 }
 
 .squash_html {

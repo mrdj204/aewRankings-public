@@ -35,6 +35,23 @@ span.green {
     color: #32FF32
 }
 
+#match_history td {
+    font-size: .5em;
+}
+#match_history > tbody > tr > td > #match_history > tbody > tr > th > a > p.wrestlers {
+    font-size: .90em;
+}
+
+#match_history > tbody > tr > td > #match_history > tbody > tr > td,
+#match_history > tbody > tr > td > #match_history > tbody > tr > th {
+    font-size: 1em;
+}
+.notes {
+    text-wrap: wrap;
+    width: 100px;
+    color: pink;
+}
+
 table, td, th, tr {
     border: 1px solid;
     border-color: #333;

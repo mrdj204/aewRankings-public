@@ -62,7 +62,7 @@ class CustomDiscordOAuthSession(DiscordOAuthSession):
         # Construct and return the session data
         return SessionData(
             username=str(user),
-            web_user=str(elite_id) in data['roles'],
+            web_user=str(elite_id) in data['roles'] or str(mod_id) in data['roles'],
             web_admin=str(user.id) == my_user_id,
             fanhub_user=any(str(guild.id) == aewfanhub_id for guild in guilds),
             fanhub_elite=str(elite_id) in data['roles'],

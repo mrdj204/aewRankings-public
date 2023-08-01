@@ -45,7 +45,7 @@
         color: #0af;
     }
 
-    h4, a.gold:link, a.gold:visited {
+    h5, h4, a.gold:link, a.gold:visited {
         color: #0ff;
     }
 </style>
@@ -54,6 +54,7 @@
 {% block content %}
 
 <h4 class="centered nomargin" style="padding-bottom: 10px">{{ updated_on|safe }}</h4>
+<h4 class="centered nomargin" style="padding-bottom: 10px">MMR Date: Today</h4>
 
 {% for event, table in output.items() %}
     <div style="padding-bottom: 15px">

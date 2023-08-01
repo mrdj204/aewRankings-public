@@ -54,6 +54,7 @@ async def get_wrestlers(request: Request, abr: str, session_info: dict = Depends
         "current_page": "wrestlers",
         "session": session_data,
         "division": output,
+        "hide_footer": True,
     }
     return TemplateResponse("wrestlers/division.html", results)
 
@@ -104,6 +105,7 @@ async def get_wrestler(request: Request, name, session_info: dict = Depends(get_
         # stats_html.append(util.html_table(stats))
         stats_html.append(stats)
     api_stats["stats_html"] = html_table(stats_html)  # stats_html
+    api_stats["match_history"] = html_table(api_stats["match_history"], id="match_history")
 
     record = ""
     if datetime.today().year in api_stats["stats"]:

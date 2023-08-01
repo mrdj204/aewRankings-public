@@ -68,7 +68,7 @@ async def recently_wrestled(request: Request, session_info: dict = Depends(get_s
             wrestlers_api = sorted(wrestlers_api, key=lambda x: x['MMR'], reverse=True)
         output[event] = html_table(wrestlers_api, classes="rankings_cards")
 
-    updated_on = f"Rankings From: {db.rankings_updated['date']}<br>{db.rankings_updated['event']}"
+    updated_on = f"Rankings Date: {db.rankings_updated['date']}<br>{db.rankings_updated['event']}"
 
     results = {
         "request": request,

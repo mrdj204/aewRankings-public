@@ -1,5 +1,6 @@
 from starlette.responses import RedirectResponse
 
+from mmr_database.division import Division
 from website import sql_db
 from website.resources import db, Depends, html_table, load_db, return_error, Request, SessionData, TemplateResponse
 from fastapi import APIRouter, Form
@@ -22,22 +23,27 @@ async def test_page(request: Request, session_info: dict = Depends(get_session_i
         error = {"error": "user doesnt have permission"}
         return await return_error(request, error)
 
-    team = db.get_contestant("M2", "FTR")
-    wrestlers = team.wrestler_list
-    all_teams = {}
-    for wrestler in wrestlers:
-        all_teams[wrestler] = [t.full_name for t in wrestler.teams]
+    # START HERE #
 
-    output = html_table(all_teams)
+    division: Division = db.get_division("M2")
+
+    output = {
+        "name": division.name,
+        "abr": division.abr,
+        "wrestlers": html_table(division.api_test(), id="division_table"),
+    }
 
     results = {
         "request": request,
         "current_page": "admin",
         "session": session_data,
-        "output": output,
+        "division": output,
         "hide_footer": True,
     }
-    return TemplateResponse("admin/test.html", results)
+
+    page = "wrestlers/division.html"
+    # page = "admin/test.html"
+    return TemplateResponse(page, results)
 
 
 @router.get("/admin/debug/")
@@ -53,9 +59,13 @@ async def debug(request: Request, session_info: dict = Depends(get_session_info)
         error = {"error": "user doesnt have permission"}
         return await return_error(request, error)
 
+    new_wrestlers = db.api_debug_new_contestants()
+    for k, v in new_wrestlers.items():
+        new_wrestlers[k] = sorted(v)
+
     output = {
         "team_errors": db.api_debug_team_errors(),
-        **db.api_debug_new_contestants(),
+        **new_wrestlers,
         "broadcasts": db.new_broadcasts,
         "events": db.new_events,
         # "placement_points": db.api_debug_placement_points(),
@@ -178,18 +188,26 @@ async def get_matches(request: Request, session_info: dict = Depends(get_session
         error = {"error": "user doesnt have permission"}
         return await return_error(request, error)
 
-    match_count = 0
-    matches = []
-    for division in db.divisions:
-        for match in division.match_history:
-            matches.append(match)
-            match_count += 1
-    matches = sorted(matches, key=lambda x: (x['date'], x["match_id"]))
+    match_count = len(db.matches)
+    matches = [match.to_json() for match in reversed(db.matches)]
+
+    # Code for finding what is stretching the table
+    # highest_length = 0
+    # hightest_match = None
+    # for match in matches:
+    #     for line in match["Event"].split("<br>"):
+    #         if len(line) > highest_length:
+    #             highest_length = len(line)
+    #             hightest_match = match
+    #
+    # print(hightest_match)
+
+    matches = html_table(matches, id="match_history")
     results = {
         "request": request,
         "current_page": "matches",
         "session": session_data,
-        "matches": reversed(matches),
+        "matches": matches,
         "match_count": match_count,
     }
     return TemplateResponse("admin/matches.html", results)
@@ -211,7 +229,7 @@ async def reload_db(request: Request, session_info: dict = Depends(get_session_i
         error = {"error": "user doesnt have permission"}
         return await return_error(request, error)
 
-    load_db()
+    db.initialize()
 
     url = request.headers["Referer"] if "Referer" in request.headers else "/"
     return RedirectResponse(url=url)
